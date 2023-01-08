@@ -1,32 +1,36 @@
-import os
-from algosdk.v2client import algod
-from algosdk import account
-from algosdk import transaction
-from algosdk.future.transaction import wait_for_confirmation as transaction_wait_for_confirmation
-from algosdk import constants
 import base64
 import json
-
-from typing import Tuple, Optional
-from collections import namedtuple
-
 import logging
+import os
+import sys
+from collections import namedtuple
+from typing import Optional, Tuple
+
+from algosdk import account
+from algosdk.future import transaction
+from algosdk.v2client import algod
 
 Account = namedtuple("Account", ["private_key", "address"])
 
-import sys
 
-file_handler = logging.FileHandler(filename='tmp.log')
-stdout_handler = logging.StreamHandler(stream=sys.stdout)
-handlers = [file_handler, stdout_handler]
+def get_logger() -> logging.Logger:
+    file_handler = logging.FileHandler(filename='tmp.log')
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    handlers = [file_handler, stdout_handler]
 
-logging.basicConfig(
-    level=logging.DEBUG, 
-    format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
-    handlers=handlers
-)
+    logging.basicConfig(
+        level=logging.DEBUG, 
+        format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
+        handlers=handlers
+    )
 
-log = logging.getLogger(__name__)
+    log = logging.getLogger(__name__)
+
+    return log
+
+
+log = get_logger()
+
 
 def get_client():
     algod_address: str = os.getenv("ALGORAND_NETWORK_ADDRESS", "http://localhost:4001")
@@ -83,7 +87,7 @@ def send_transaction(
     account_info = get_account_info(algod_client=algod_client, account_address=source_address)
     log.info(f"Starting Account balance: {account_info.get('amount')} microAlgos")
     try:
-        confirmed_txn = transaction_wait_for_confirmation(algod_client, txid, 4)  
+        confirmed_txn = transaction.wait_for_confirmation(algod_client, txid, 4)  
     except Exception as err:
         log.error(err)
         return
