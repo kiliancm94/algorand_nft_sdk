@@ -9,24 +9,9 @@ from typing import Optional, Tuple
 from algosdk import account
 from algosdk.future import transaction
 from algosdk.v2client import algod
+from algorand_nft_sdk_old.utils.logger import get_logger
 
 Account = namedtuple("Account", ["private_key", "address"])
-
-
-def get_logger() -> logging.Logger:
-    file_handler = logging.FileHandler(filename='tmp.log')
-    stdout_handler = logging.StreamHandler(stream=sys.stdout)
-    handlers = [file_handler, stdout_handler]
-
-    logging.basicConfig(
-        level=logging.DEBUG, 
-        format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
-        handlers=handlers
-    )
-
-    log = logging.getLogger(__name__)
-
-    return log
 
 
 log = get_logger()

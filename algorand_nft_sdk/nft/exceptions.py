@@ -1,0 +1,2 @@
+class AssetUrlNotAccessible(Exception):
+    pass
