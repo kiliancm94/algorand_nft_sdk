@@ -21,7 +21,7 @@ class NFT:
         unit_name: str,
         asset_name: str,
         asset_url: str,
-        asset_metadata_hash: str,
+        asset_metadata_hash: Optional[str] = None,
         total: int = 1,
         decimals: int = 0,
         default_frozen: bool = False,
@@ -56,19 +56,22 @@ class NFT:
 
         self.manager_account = manager_account if manager_account else source_account
 
-    def create(self) -> None:
+    def create(self) -> str:
         # Asset Creation transaction
         txn = AssetConfigTxn(
-            sender=self.source_account.private_key,
-            sp=self.params,
+            sender=self.source_account.address,
+            fee=self.params.fee,
+            first=self.params.first,
+            last=self.params.last,
+            gh=self.params.gh,
             total=self.total,
             default_frozen=self.default_frozen,
             unit_name=self.unit_name,
             asset_name=self.arc3_schema.asset_name,
-            manager=self.manager_account.private_key,
-            reserve=self.manager_account.private_key,
-            freeze=self.manager_account.private_key,
-            clawback=self.manager_account.private_key,
+            manager=self.manager_account.address,
+            reserve=self.manager_account.address,
+            freeze=self.manager_account.address,
+            clawback=self.manager_account.address,
             url=self.arc3_schema.asset_url,
             decimals=self.decimals,
         )
@@ -86,21 +89,12 @@ class NFT:
             log.info(f"Result confirmed in round: {confirmed_txn['confirmed-round']}")   
         except Exception as err:
             log.error(err)
-        # Retrieve the asset ID of the newly created asset by first
-        # ensuring that the creation transaction was confirmed,
-        # then grabbing the asset id from the transaction.
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
-        # print("Decoded note: {}".format(base64.b64decode(
-        #     confirmed_txn["txn"]["txn"]["note"]).decode()))
         try:
-            # Pull account info for the creator
-            # account_info = algod_client.account_info(accounts[1]['pk'])
-            # get asset_id from tx
-            # Get the new asset's information from the creator account
             ptx = self.algod_client.pending_transaction_info(txid)
             asset_id = ptx["asset-index"]
-            # print_created_asset(algod_client, accounts[1]['pk'], asset_id)
-            # print_asset_holding(algod_client, accounts[1]['pk'], asset_id)
+
+            self.asset_id = asset_id
         except Exception as e:
             print(e)
 
@@ -112,6 +106,9 @@ class NFT:
                 f"The asset url {self.arc3_schema.asset_url} it was not accessible."
                 "Please, verify the url is still up."
             )
+
+        log.warning("Skipping the verification of the metadata, need to code it better since uses headers.")
+        return
         
         try:
             ARC3Metadata(**response.json())

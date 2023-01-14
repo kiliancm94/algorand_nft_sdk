@@ -1,2 +1,5 @@
 scripts/sandbox/
 sandbox/
+__pycache__
+tmp.log
+my_private_key

@@ -7,14 +7,13 @@ from typing import Optional
 from pydantic import BaseModel, validator
 
 from algorand_nft_sdk.utils.logger import get_logger
-from algorand_nft_sdk.utils.all_optionals import AllOptional
 
 
 class ARC3(BaseModel):
     unit_name: str
     asset_name: str
     asset_url: str
-    asset_metadata_hash: str
+    asset_metadata_hash: Optional[str]
 
 
 class LocalizationParams(BaseModel):
@@ -24,21 +23,21 @@ class LocalizationParams(BaseModel):
     integrity: Optional[dict]
 
 
-class ARC3Metadata(BaseModel, metaclass=AllOptional):
-    name: str
-    decimals: int
-    description: str
-    image: str
-    image_integrity: str
-    image_mimetype: str
-    background_color: str
-    external_url: str
-    animation_url: str
-    animation_url_integrity: str
-    animation_url_mimetype: str
-    properties: dict
-    extra_metadata: str
-    localization: LocalizationParams
+class ARC3Metadata(BaseModel):
+    name: Optional[str]
+    decimals: Optional[int]
+    description: Optional[str]
+    image: Optional[str]
+    image_integrity: Optional[str]
+    image_mimetype: Optional[str]
+    background_color: Optional[str]
+    external_url: Optional[str]
+    animation_url: Optional[str]
+    animation_url_integrity: Optional[str]
+    animation_url_mimetype: Optional[str]
+    properties: Optional[str]
+    extra_metadata: Optional[str]
+    localization: Optional[LocalizationParams]
 
     @validator("extra_metadata")
     def validate_base65(cls, v) -> str:
