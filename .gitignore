@@ -3,3 +3,6 @@ sandbox/
 __pycache__
 tmp.log
 my_private_key
+algorand_nft_sdk.egg-info
+build/
+

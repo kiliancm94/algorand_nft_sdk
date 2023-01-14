@@ -9,7 +9,7 @@ from algosdk.v2client import algod
 from algorand_nft_sdk.utils.logger import get_logger
 from algorand_nft_sdk.nft import exceptions
 from algorand_nft_sdk.asset_schemas.arc3 import ARC3, ARC3Metadata
-from algorand_nft_sdk.utils.utils import Account
+from algorand_nft_sdk.utils.account import Account
 
 log = get_logger()
 
@@ -89,6 +89,8 @@ class NFT:
             log.info(f"Result confirmed in round: {confirmed_txn['confirmed-round']}")   
         except Exception as err:
             log.error(err)
+            raise
+
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
         try:
             ptx = self.algod_client.pending_transaction_info(txid)
