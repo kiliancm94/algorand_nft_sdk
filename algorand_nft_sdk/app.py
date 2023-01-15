@@ -7,7 +7,7 @@ from algosdk.account import address_from_private_key, generate_account
 from algorand_nft_sdk.nft import arc3
 from algorand_nft_sdk.utils.account import Account
 
-# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key 
+# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key
 # can be found in a my_private_key file.
 # ('Ha+zrQZPMVoEzdv0MB1nEoVanfQH2CsDEB61sVFZWyoU/euDc/G9tsX7OCbx7NwzyEfy/NDJprKWT/VqxrWdYQ==',
 #  'CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA')
@@ -44,10 +44,10 @@ def mint_nft_arc3(
     if os.path.isfile(private_key):
         with open(private_key, "r") as file:
             private_key = file.read().strip()
-    
+
     source_account = Account(
         private_key=private_key,
-        address=address_from_private_key(private_key=private_key)
+        address=address_from_private_key(private_key=private_key),
     )
 
     print(source_account)
@@ -57,7 +57,7 @@ def mint_nft_arc3(
         source_account=source_account,
         unit_name=unit_name,
         asset_name=asset_name,
-        asset_url=asset_url
+        asset_url=asset_url,
     )
 
     arc3_nft.validate_metadata()

@@ -4,9 +4,7 @@ from algosdk.account import address_from_private_key, generate_account
 
 class Account:
     def __init__(
-        self,
-        private_key: Optional[str] = None,
-        address: Optional[str] = None
+        self, private_key: Optional[str] = None, address: Optional[str] = None
     ) -> None:
         if private_key:
             self.private_key = private_key

@@ -2,7 +2,7 @@ import click
 
 from algorand_nft_sdk import app
 
-# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key 
+# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key
 # can be found in a my_private_key file.
 # ('Ha+zrQZPMVoEzdv0MB1nEoVanfQH2CsDEB61sVFZWyoU/euDc/G9tsX7OCbx7NwzyEfy/NDJprKWT/VqxrWdYQ==',
 #  'CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA')
@@ -19,7 +19,7 @@ def nft():
     "--private-key",
     type=str,
     required=True,
-    help="File path of the private key or plain private key used to sign the transactions."
+    help="File path of the private key or plain private key used to sign the transactions.",
 )
 @click.option(
     "--unit-name",
@@ -27,17 +27,12 @@ def nft():
     type=str,
     help="Name of an unit of this asset",
 )
-@click.option(
-    "--asset-name",
-    required=True,
-    type=str,
-    help="Name of the asset"
-)
+@click.option("--asset-name", required=True, type=str, help="Name of the asset")
 @click.option(
     "--asset-url",
     required=True,
     type=str,
-    help="URL where to find the Asset, it must be accessible"
+    help="URL where to find the Asset, it must be accessible",
 )
 # @click.option(
 #     "--asset-metadata-hash",

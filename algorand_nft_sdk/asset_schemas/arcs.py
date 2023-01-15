@@ -7,6 +7,7 @@ class ARC(str, Enum):
     in the following link:
     https://github.com/algorandfoundation/ARCs/blob/main/ARCs/
     """
+
     ARC_3 = "arc3"
     ARC_18 = "arc18"
     ARC_19 = "arc19"

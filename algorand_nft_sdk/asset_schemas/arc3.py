@@ -46,7 +46,7 @@ class ARC3Metadata(BaseModel):
             return v
         except:
             raise ValueError("extra_metadata field must be a string in base64")
-        
+
 
 def calculate_hash_metadata(arc3_metadata: ARC3Metadata) -> bytes:
     h = hashlib.new("sha512_256")

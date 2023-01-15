@@ -13,6 +13,7 @@ from algorand_nft_sdk.utils.account import Account
 
 log = get_logger()
 
+
 class NFT:
     def __init__(
         self,
@@ -38,7 +39,7 @@ class NFT:
             asset_name=asset_name,
             asset_url=asset_url,
             asset_metadata_hash=asset_metadata_hash,
-        ) 
+        )
         self.unit_name = unit_name
         self.total = total
         self.decimals = decimals
@@ -78,15 +79,13 @@ class NFT:
 
         stxn = txn.sign(self.source_account.private_key)
         txid = self.algod_client.send_transaction(stxn)
-        
+
         try:
             confirmed_txn = transaction.wait_for_confirmation(
-                self.algod_client,
-                txid,
-                4
+                self.algod_client, txid, 4
             )
             log.info(f"TXID: {txid}")
-            log.info(f"Result confirmed in round: {confirmed_txn['confirmed-round']}")   
+            log.info(f"Result confirmed in round: {confirmed_txn['confirmed-round']}")
         except Exception as err:
             log.error(err)
             raise
@@ -109,9 +108,11 @@ class NFT:
                 "Please, verify the url is still up."
             )
 
-        log.warning("Skipping the verification of the metadata, need to code it better since uses headers.")
+        log.warning(
+            "Skipping the verification of the metadata, need to code it better since uses headers."
+        )
         return
-        
+
         try:
             ARC3Metadata(**response.json())
         except Exception as error:
