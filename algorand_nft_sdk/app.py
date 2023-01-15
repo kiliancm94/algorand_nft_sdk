@@ -1,22 +1,17 @@
 import os
+from typing import Optional
 
-import click
 from algosdk.v2client import algod
-from algosdk.account import address_from_private_key, generate_account
+from algosdk.account import address_from_private_key
 
 from algorand_nft_sdk.nft import arc3
-from algorand_nft_sdk.utils.account import Account
+from algorand_nft_sdk.utils.account import Account, get_private_key_from_file_or_string
 
-# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key
-# can be found in a my_private_key file.
-# ('Ha+zrQZPMVoEzdv0MB1nEoVanfQH2CsDEB61sVFZWyoU/euDc/G9tsX7OCbx7NwzyEfy/NDJprKWT/VqxrWdYQ==',
-#  'CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA')
-
-
-@click.group()
-def nft():
-    click.echo("Hello!")
-    pass
+# FIXME: FROM HERE
+algod_address = "http://localhost:4001"
+algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+algod_client = algod.AlgodClient(algod_token, algod_address)
+# FIXME: UNTIL HERE
 
 
 def mint_nft_arc3(
@@ -24,33 +19,25 @@ def mint_nft_arc3(
     unit_name: str,
     asset_name: str,
     asset_url: str,
-    # asset_metadata_hash: str,
-    # total: int = 1,
-    # decimals: int = 0,
-    # default_frozen: bool = False,
-    # fee: Optional[int] = None,
-    # flat_fee: Optional[bool] = None,
-    # manager_account: Optional[Account] = None,
-    # overrides_suggested_params: Optional[dict] = None,
+    asset_metadata_hash: Optional[str] = None,
+    total: int = 1,
+    decimals: int = 0,
+    default_frozen: bool = False,
+    fee: Optional[int] = None,
+    flat_fee: Optional[bool] = None,
+    manager_account: Optional[Account] = None,
+    reserve_account: Optional[Account] = None,
+    freeze_account: Optional[Account] = None,
+    clawback_account: Optional[Account] = None,
+    strict_empty_address_check: bool = True,
+    overrides_suggested_params: Optional[dict] = None,
 ):
-    # algod_client = algod.AlgodClient()
-
-    # FIXME: FROM HERE
-    algod_address = "http://localhost:4001"
-    algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    algod_client = algod.AlgodClient(algod_token, algod_address)
-    # FIXME: UNTIL HERE
-
-    if os.path.isfile(private_key):
-        with open(private_key, "r") as file:
-            private_key = file.read().strip()
+    private_key = get_private_key_from_file_or_string(private_key)
 
     source_account = Account(
         private_key=private_key,
         address=address_from_private_key(private_key=private_key),
     )
-
-    print(source_account)
 
     arc3_nft = arc3.NFT(
         algod_client,
@@ -58,7 +45,42 @@ def mint_nft_arc3(
         unit_name=unit_name,
         asset_name=asset_name,
         asset_url=asset_url,
+        asset_metadata_hash=asset_metadata_hash,
+        total=total,
+        decimals=decimals,
+        default_frozen=default_frozen,
+        fee=fee,
+        flat_fee=flat_fee,
+        manager_account=manager_account,
+        reserve_account=reserve_account,
+        freeze_account=freeze_account,
+        clawback_account=clawback_account,
+        strict_empty_address_check=strict_empty_address_check,
+        overrides_suggested_params=overrides_suggested_params,
     )
 
-    arc3_nft.validate_metadata()
+    arc3_nft.validate_asset_url()
     arc3_nft.create()
+
+
+def transfer_nft_arc3(
+    private_key: str,
+    receiver_address: str,
+    asset_id: int,
+    amount: int,
+):
+    private_key = get_private_key_from_file_or_string(private_key)
+
+    source_account = Account(
+        private_key=private_key,
+        address=address_from_private_key(private_key=private_key),
+    )
+    arc3_nft = arc3.NFT(
+        algod_client=algod_client,
+        asset_id=asset_id,
+        source_account=source_account,
+    )
+
+    receiver_account = Account(address=receiver_address)
+
+    arc3_nft.transfer(receiver=receiver_account, amount=amount)

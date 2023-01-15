@@ -10,9 +10,9 @@ from algorand_nft_sdk.utils.logger import get_logger
 
 
 class ARC3(BaseModel):
-    unit_name: str
-    asset_name: str
-    asset_url: str
+    unit_name: Optional[str]
+    asset_name: Optional[str]
+    asset_url: Optional[str]
     asset_metadata_hash: Optional[str]
 
 

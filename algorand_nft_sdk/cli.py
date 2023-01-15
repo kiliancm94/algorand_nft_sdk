@@ -1,26 +1,26 @@
+from typing import Optional
 import click
 
 from algorand_nft_sdk import app
-
-# My account funded is CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA, private key
-# can be found in a my_private_key file.
-# ('Ha+zrQZPMVoEzdv0MB1nEoVanfQH2CsDEB61sVFZWyoU/euDc/G9tsX7OCbx7NwzyEfy/NDJprKWT/VqxrWdYQ==',
-#  'CT66XA3T6G63NRP3HATPD3G4GPEEP4X42DE2NMUWJ72WVRVVTVQZ7F3BDA')
+from algorand_nft_sdk.utils.account import Account
 
 
 @click.group()
-def nft():
-    click.echo("Hello!")
-    pass
-
-
-@click.command()
 @click.option(
     "--private-key",
     type=str,
     required=True,
     help="File path of the private key or plain private key used to sign the transactions.",
 )
+@click.pass_context
+def nft(ctx: click.Context, private_key: str):
+    click.echo("Hello!")
+    ctx.ensure_object(dict)
+    ctx.obj["private_key"] = private_key
+
+
+@click.command
+@click.pass_context
 @click.option(
     "--unit-name",
     required=True,
@@ -34,36 +34,100 @@ def nft():
     type=str,
     help="URL where to find the Asset, it must be accessible",
 )
-# @click.option(
-#     "--asset-metadata-hash",
-#     required=True,
-#     type=str,
-#     help="The calculated has of the metadata of the asset."
-# )
+@click.option(
+    "--asset-metadata-hash",
+    required=False,
+    type=str,
+    help="The calculated has of the metadata of the asset.",
+)
+@click.option(
+    "--total", required=False, type=int, default=1, help="Total amount of the asset."
+)
+@click.option(
+    "--decimals",
+    required=False,
+    type=int,
+    default=0,
+    help="Total decimals of the asset.",
+)
+@click.option(
+    "--default_frozen",
+    required=False,
+    type=bool,
+    is_flag=True,
+    default=False,
+    help="If the token is by default frozen.",
+)
+@click.option(
+    "--fee", required=False, type=int, default=None, help="The fee of the transaction."
+)
+@click.option(
+    "--flat-fee",
+    required=False,
+    type=bool,
+    is_flag=True,
+    default=None,
+    help="If it's a flat fee",
+)
+@click.option(
+    "--manager-account",
+    type=str,
+    required=False,
+    help="The account of the manager of the token.",
+)
+@click.option(
+    "--reserve-account",
+    type=str,
+    required=False,
+    help="The account for reserve token.",
+)
+@click.option(
+    "--freeze-account",
+    type=str,
+    required=False,
+    help="The account that can freeze the token.",
+)
+@click.option(
+    "--clawback-account",
+    type=str,
+    required=False,
+    help="The account that can clawback the token.",
+)
+@click.option(
+    "--permit-empty-address",
+    type=bool,
+    required=False,
+    default=False,
+    is_flag=True,
+    help="If it allows empty addresses.",
+)
 def mint_nft_arc3(
-    private_key: str,
-    unit_name: str,
-    asset_name: str,
-    asset_url: str,
-    # asset_metadata_hash: str,
-    # total: int = 1,
-    # decimals: int = 0,
-    # default_frozen: bool = False,
-    # fee: Optional[int] = None,
-    # flat_fee: Optional[bool] = None,
-    # manager_account: Optional[Account] = None,
-    # overrides_suggested_params: Optional[dict] = None,
+    ctx: click.Context,
+    **kwargs,
 ):
+    kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
     app.mint_nft_arc3(
-        private_key=private_key,
-        unit_name=unit_name,
-        asset_name=asset_name,
-        asset_url=asset_url,
+        private_key=ctx.obj["private_key"],
+        **kwargs,
     )
 
 
+@click.command
+@click.pass_context
+@click.option(
+    "--receiver-address", type=str, required=True, help="Account of the receiver."
+)
+@click.option("--amount", type=int, required=True, help="Amount of tokens to transfer.")
+@click.option(
+    "--asset-id", type=int, required=True, help="Id of the asset to transfer."
+)
+def transfer_nft_arc3(ctx, **kwargs):
+    app.transfer_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
+
+
 nft.add_command(mint_nft_arc3)
+nft.add_command(transfer_nft_arc3)
 
 
 if __name__ == "__main__":
-    nft()
+    nft(obj={})
