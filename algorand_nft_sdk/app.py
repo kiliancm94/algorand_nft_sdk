@@ -1,4 +1,3 @@
-import os
 from typing import Optional
 
 from algosdk.v2client import algod
@@ -68,7 +67,7 @@ def transfer_nft_arc3(
     receiver_address: str,
     asset_id: int,
     amount: int,
-):
+) -> None:
     private_key = get_private_key_from_file_or_string(private_key)
 
     source_account = Account(
@@ -82,5 +81,41 @@ def transfer_nft_arc3(
     )
 
     receiver_account = Account(address=receiver_address)
+    print(receiver_account.address)
 
     arc3_nft.transfer(receiver=receiver_account, amount=amount)
+
+
+def opt_in_nft_arc3(
+    private_key: str,
+    asset_id: int,
+) -> None:
+    private_key = get_private_key_from_file_or_string(private_key)
+
+    source_account = Account(
+        private_key=private_key,
+        address=address_from_private_key(private_key=private_key),
+    )
+    arc3_nft = arc3.NFT(
+        algod_client=algod_client,
+        asset_id=asset_id,
+        source_account=source_account,
+    )
+
+    arc3_nft.opt_in()
+
+
+def account_assets(private_key: str):
+    # fixme: make prettier
+    private_key = get_private_key_from_file_or_string(private_key)
+
+    account_info = Account.get_account_info(
+        algod_client=algod_client,
+        address=address_from_private_key(private_key=private_key),
+    )
+
+    result = {}
+    for asset in account_info["assets"]:
+        result[asset.pop("asset-id")] = asset
+
+    return result

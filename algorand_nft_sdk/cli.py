@@ -1,5 +1,6 @@
 from typing import Optional
 import click
+import json
 
 from algorand_nft_sdk import app
 from algorand_nft_sdk.utils.account import Account
@@ -125,8 +126,30 @@ def transfer_nft_arc3(ctx, **kwargs):
     app.transfer_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
 
 
+@click.command
+@click.pass_context
+@click.option(
+    "--asset-id", type=int, required=True, help="Id of the asset to transfer."
+)
+def opt_in_nft_arc3(ctx, **kwargs):
+    app.opt_in_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
+
+
+@click.command
+@click.pass_context
+def account_assets(ctx):
+    click.echo(
+        json.dumps(
+            app.account_assets(private_key=ctx.obj["private_key"]),
+            indent=2,
+        )
+    )
+
+
 nft.add_command(mint_nft_arc3)
 nft.add_command(transfer_nft_arc3)
+nft.add_command(opt_in_nft_arc3)
+nft.add_command(account_assets)
 
 
 if __name__ == "__main__":

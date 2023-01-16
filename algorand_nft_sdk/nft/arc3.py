@@ -155,25 +155,6 @@ class NFT:
         *   receiver: Account of the receiver.
         *   amount: Amount to send to the receiver.
         """
-        # FIXME: Add check if the asset is opt-in first
-        # it seems the other address must to be also yous (to have pk)
-        # I need to do first with the receiver transferring 0 amount to opt to the
-        # asset before sending it
-        # https://developer.algorand.org/docs/get-details/asa/#receiving-an-asset
-        txn_transfer = transaction.AssetTransferTxn(
-            sender=self.source_account.address,
-            sp=self.params,
-            receiver=self.source_account.address,  # to myself
-            amt=0,
-            index=self.asset_id,
-        )
-        sign_and_send_transaction(
-            algod_client=self.algod_client,
-            source_account=self.source_account,
-            txn=txn_transfer,
-            log=log,
-        )
-        # FIXME: Until here
 
         self.validate_asset_is_created()
         txn_transfer = transaction.AssetTransferTxn(
@@ -192,3 +173,36 @@ class NFT:
         )
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
         return txid
+
+    def opt_in(self) -> None:
+        """
+        Holds an asset in order the asset can be sent to an address.
+        https://developer.algorand.org/docs/get-details/asa/#receiving-an-asset
+        """
+        self.validate_asset_is_created()
+
+        account_info = Account.get_account_info(
+            self.source_account.address,
+            self.algod_client,
+        )
+
+        for asset in account_info["assets"]:
+            if asset["asset-id"] == self.asset_id:
+                log.info("The account already opt in to the asset.")
+                return
+
+        txn_transfer = transaction.AssetTransferTxn(
+            sender=self.source_account.address,
+            sp=self.params,
+            receiver=self.source_account.address,
+            amt=0,
+            index=self.asset_id,
+        )
+
+        _, confirmed_txn = sign_and_send_transaction(
+            algod_client=self.algod_client,
+            source_account=self.source_account,
+            txn=txn_transfer,
+            log=log,
+        )
+        log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
