@@ -10,7 +10,7 @@ from algorand_nft_sdk.utils.account import Account
 @click.option(
     "--private-key",
     type=str,
-    required=True,
+    required=False,
     help="File path of the private key or plain private key used to sign the transactions.",
 )
 @click.pass_context
@@ -20,7 +20,7 @@ def nft(ctx: click.Context, private_key: str):
     ctx.obj["private_key"] = private_key
 
 
-@click.command
+@nft.command
 @click.pass_context
 @click.option(
     "--unit-name",
@@ -113,7 +113,7 @@ def mint_nft_arc3(
     )
 
 
-@click.command
+@nft.command
 @click.pass_context
 @click.option(
     "--receiver-address", type=str, required=True, help="Account of the receiver."
@@ -126,7 +126,7 @@ def transfer_nft_arc3(ctx, **kwargs):
     app.transfer_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
 
 
-@click.command
+@nft.command
 @click.pass_context
 @click.option(
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
@@ -135,21 +135,24 @@ def opt_in_nft_arc3(ctx, **kwargs):
     app.opt_in_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
 
 
-@click.command
+@nft.command
 @click.pass_context
-def account_assets(ctx):
+@click.option(
+    "--address",
+    type=str,
+    required=False,
+    help="An account Address. If private key is passed, address is ignored!!!",
+)
+def account_assets(ctx, address: Optional[str] = None) -> None:
+    if ctx.obj["private_key"] and address:
+        click.echo("Private key is sent, hence address is ignored.")
+
     click.echo(
         json.dumps(
-            app.account_assets(private_key=ctx.obj["private_key"]),
+            app.account_assets(private_key=ctx.obj["private_key"], address=address),
             indent=2,
         )
     )
-
-
-nft.add_command(mint_nft_arc3)
-nft.add_command(transfer_nft_arc3)
-nft.add_command(opt_in_nft_arc3)
-nft.add_command(account_assets)
 
 
 if __name__ == "__main__":

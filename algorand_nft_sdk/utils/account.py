@@ -25,6 +25,18 @@ class Account:
     def get_account_info(address: str, algod_client: AlgodClient) -> dict:
         return algod_client.account_info(address=address)
 
+    def get_assets_of_account(self, algod_client: AlgodClient):
+        account_info = Account.get_account_info(
+            algod_client=algod_client,
+            address=self.address,
+        )
+
+        result = {}
+        for asset in account_info["assets"]:
+            result[asset.pop("asset-id")] = asset
+
+        return result
+
 
 def get_private_key_from_file_or_string(private_key: str) -> str:
     if os.path.isfile(private_key):
