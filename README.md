@@ -1,4 +1,9 @@
 # algorand_nft_sdk
 
 TODO:
-Change the name of the opt_in method to optin or holding, add info
+[x] Finished with ARC3
+[ ] Change the current NFT class to decide the ARC type
+[ ] ARC19
+[ ] ARC20
+[ ] ARC18
+[ ] ARC69

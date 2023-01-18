@@ -174,7 +174,7 @@ class NFT:
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
         return txid
 
-    def opt_in(self) -> None:
+    def optin(self) -> None:
         """
         Holds an asset in order the asset can be sent to an address.
         https://developer.algorand.org/docs/get-details/asa/#receiving-an-asset

@@ -102,12 +102,12 @@ def nft(ctx: click.Context, private_key: str):
     is_flag=True,
     help="If it allows empty addresses.",
 )
-def mint_nft_arc3(
+def mint_nft_arc(
     ctx: click.Context,
     **kwargs,
 ):
     kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
-    app.mint_nft_arc3(
+    app.mint_nft_arc(
         private_key=ctx.obj["private_key"],
         **kwargs,
     )
@@ -122,8 +122,8 @@ def mint_nft_arc3(
 @click.option(
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
-def transfer_nft_arc3(ctx, **kwargs):
-    app.transfer_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
+def transfer_nft_arc(ctx, **kwargs):
+    app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -131,8 +131,8 @@ def transfer_nft_arc3(ctx, **kwargs):
 @click.option(
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
-def opt_in_nft_arc3(ctx, **kwargs):
-    app.opt_in_nft_arc3(private_key=ctx.obj["private_key"], **kwargs)
+def optin_nft_arc(ctx, **kwargs):
+    app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command

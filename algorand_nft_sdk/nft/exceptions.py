@@ -4,3 +4,7 @@ class AssetUrlNotAccessible(Exception):
 
 class AssetIdIsNone(Exception):
     pass
+
+
+class ValueErrorAssetUrl(Exception):
+    pass

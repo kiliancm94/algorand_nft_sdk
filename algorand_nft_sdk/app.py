@@ -3,7 +3,7 @@ from typing import Optional
 from algosdk.v2client import algod
 from algosdk.account import address_from_private_key
 
-from algorand_nft_sdk.nft import arc3
+from algorand_nft_sdk.nft import arc
 from algorand_nft_sdk.utils.account import Account, get_private_key_from_file_or_string
 
 # FIXME: FROM HERE
@@ -13,7 +13,7 @@ algod_client = algod.AlgodClient(algod_token, algod_address)
 # FIXME: UNTIL HERE
 
 
-def mint_nft_arc3(
+def mint_nft_arc(
     private_key: str,
     unit_name: str,
     asset_name: str,
@@ -38,7 +38,7 @@ def mint_nft_arc3(
         address=address_from_private_key(private_key=private_key),
     )
 
-    arc3_nft = arc3.NFT(
+    arc_nft = arc.NFT(
         algod_client,
         source_account=source_account,
         unit_name=unit_name,
@@ -58,11 +58,11 @@ def mint_nft_arc3(
         overrides_suggested_params=overrides_suggested_params,
     )
 
-    arc3_nft.validate_asset_url()
-    arc3_nft.create()
+    arc_nft.validate_asset_url()
+    arc_nft.create()
 
 
-def transfer_nft_arc3(
+def transfer_nft_arc(
     private_key: str,
     receiver_address: str,
     asset_id: int,
@@ -74,7 +74,7 @@ def transfer_nft_arc3(
         private_key=private_key,
         address=address_from_private_key(private_key=private_key),
     )
-    arc3_nft = arc3.NFT(
+    arc_nft = arc.NFT(
         algod_client=algod_client,
         asset_id=asset_id,
         source_account=source_account,
@@ -83,10 +83,10 @@ def transfer_nft_arc3(
     receiver_account = Account(address=receiver_address)
     print(receiver_account.address)
 
-    arc3_nft.transfer(receiver=receiver_account, amount=amount)
+    arc_nft.transfer(receiver=receiver_account, amount=amount)
 
 
-def opt_in_nft_arc3(
+def optin_nft_arc(
     private_key: str,
     asset_id: int,
 ) -> None:
@@ -96,13 +96,13 @@ def opt_in_nft_arc3(
         private_key=private_key,
         address=address_from_private_key(private_key=private_key),
     )
-    arc3_nft = arc3.NFT(
+    arc_nft = arc.NFT(
         algod_client=algod_client,
         asset_id=asset_id,
         source_account=source_account,
     )
 
-    arc3_nft.opt_in()
+    arc_nft.optin()
 
 
 def account_assets(private_key: Optional[str], address: Optional[str]):
