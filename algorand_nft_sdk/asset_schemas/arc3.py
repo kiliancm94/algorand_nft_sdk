@@ -32,8 +32,14 @@ class ARC3(BaseModel):
     @validator("asset_url")
     def validate_asset_url(cls, v: str, values: dict):
         if "{id}" not in v:
-            response = requests.get(v.rstrip("#arc3"))
-            if not response.ok:
+            try:
+                response = requests.get(v.rstrip("#arc3"))
+                if not response.ok:
+                    log.warning(
+                        f"Error downloading asset url, asset url SHOULD be downloadable, please check {ARC3_URL}"
+                    )
+            except Exception as error:
+                log.error(error)
                 log.warning(
                     f"Error downloading asset url, asset url SHOULD be downloadable, please check {ARC3_URL}"
                 )
@@ -51,6 +57,7 @@ class ARC3(BaseModel):
                 raise exceptions.ValueErrorAssetUrl(
                     f"Asset name must end with #arc3 based on your asset_name, please check {ARC3_URL}"
                 )
+        return v
 
 
 class LocalizationParams(BaseModel):
@@ -90,6 +97,7 @@ class ARC3Metadata(BaseModel):
             raise ValueError(
                 f"background_color must start with '#', please check {ARC3_URL}"
             )
+        return v
 
 
 def calculate_hash_metadata(arc3_metadata: ARC3Metadata) -> bytes:

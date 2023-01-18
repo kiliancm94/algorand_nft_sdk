@@ -2,7 +2,7 @@ from typing import Optional
 import click
 import json
 
-from algorand_nft_sdk import app
+from algorand_nft_sdk import algorand_nft_app
 from algorand_nft_sdk.utils.account import Account
 
 
@@ -107,7 +107,7 @@ def mint_nft_arc(
     **kwargs,
 ):
     kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
-    app.mint_nft_arc(
+    algorand_nft_app.mint_nft_arc(
         private_key=ctx.obj["private_key"],
         **kwargs,
     )
@@ -123,7 +123,7 @@ def mint_nft_arc(
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
 def transfer_nft_arc(ctx, **kwargs):
-    app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+    algorand_nft_app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -132,7 +132,7 @@ def transfer_nft_arc(ctx, **kwargs):
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
 def optin_nft_arc(ctx, **kwargs):
-    app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+    algorand_nft_app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -149,7 +149,9 @@ def account_assets(ctx, address: Optional[str] = None) -> None:
 
     click.echo(
         json.dumps(
-            app.account_assets(private_key=ctx.obj["private_key"], address=address),
+            algorand_nft_app.account_assets(
+                private_key=ctx.obj["private_key"], address=address
+            ),
             indent=2,
         )
     )
