@@ -1,7 +1,10 @@
 from enum import Enum
+from pydantic import BaseModel
+
+from .arc3 import ARC3
 
 
-class ARC(str, Enum):
+class ARCType(str, Enum):
     """
     Standards for NFT of Algorand Network. You can find each specifications
     in the following link:
@@ -13,3 +16,7 @@ class ARC(str, Enum):
     ARC_19 = "arc19"
     ARC_20 = "arc20"
     ARC_69 = "arc69"
+
+
+class ARC(BaseModel):
+    arc: ARC3

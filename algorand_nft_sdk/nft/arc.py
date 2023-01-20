@@ -7,7 +7,9 @@ from algosdk.v2client import algod
 
 from algorand_nft_sdk.utils.logger import get_logger
 from algorand_nft_sdk.nft import exceptions
-from algorand_nft_sdk.asset_schemas.arc3 import ARC3
+
+# from algorand_nft_sdk.asset_schemas.arc3 import ARC3
+from algorand_nft_sdk.asset_schemas.arcs import ARC, ARCType
 from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.utils.transaction import sign_and_send_transaction
 
@@ -24,6 +26,7 @@ class NFT:
         self,
         algod_client: algod.AlgodClient,
         source_account: Account,
+        arc_type: ARCType = ARCType.ARC_3,
         unit_name: Optional[str] = None,
         asset_name: Optional[str] = None,
         asset_url: Optional[str] = None,
@@ -67,12 +70,14 @@ class NFT:
 
         self.algod_client = algod_client
         self.source_account = source_account
-        self.arc3_schema = ARC3(
+        arc_dict = dict(
+            arc_type=arc_type,
             unit_name=unit_name,
             asset_name=asset_name,
             asset_url=asset_url,
             asset_metadata_hash=asset_metadata_hash,
         )
+        self.arc3_schema = ARC(arc={k: v for k, v in arc_dict.items() if v})
         self.unit_name = unit_name
         self.total = total
         self.decimals = decimals

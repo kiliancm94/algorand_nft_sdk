@@ -2,7 +2,7 @@ import base64
 import hashlib
 import json
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, validator, AnyUrl
 
@@ -16,6 +16,7 @@ ARC3_URL: str = "https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0
 
 
 class ARC3(BaseModel):
+    arc_type: Literal["arc3"]
     unit_name: Optional[str]
     asset_name: Optional[str]
     asset_url: Optional[AnyUrl]
