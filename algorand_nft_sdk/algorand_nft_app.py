@@ -5,6 +5,7 @@ from algosdk.account import address_from_private_key
 
 from algorand_nft_sdk.nft import arc
 from algorand_nft_sdk.utils.account import Account, get_private_key_from_file_or_string
+from algorand_nft_sdk.asset_schemas.arcs import ARCType
 
 # FIXME: FROM HERE
 algod_address = "http://localhost:4001"
@@ -15,6 +16,7 @@ algod_client = algod.AlgodClient(algod_token, algod_address)
 
 def mint_nft_arc(
     private_key: str,
+    arc_type: ARCType,
     unit_name: str,
     asset_name: str,
     asset_url: str,
@@ -41,6 +43,7 @@ def mint_nft_arc(
     arc_nft = arc.NFT(
         algod_client,
         source_account=source_account,
+        arc_type=arc_type,
         unit_name=unit_name,
         asset_name=asset_name,
         asset_url=asset_url,

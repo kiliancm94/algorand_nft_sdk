@@ -4,6 +4,7 @@ import json
 
 from algorand_nft_sdk import algorand_nft_app
 from algorand_nft_sdk.utils.account import Account
+from algorand_nft_sdk.asset_schemas.arcs import ARCType
 
 
 @click.group()
@@ -22,6 +23,13 @@ def nft(ctx: click.Context, private_key: str):
 
 @nft.command
 @click.pass_context
+@click.option(
+    "--arc-type",
+    required=False,
+    type=str,
+    default=ARCType.ARC_3,
+    help="ARC type. Supported values are 'arc3', 'arc19'",
+)
 @click.option(
     "--unit-name",
     required=True,

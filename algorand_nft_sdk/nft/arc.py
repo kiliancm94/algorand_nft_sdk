@@ -47,6 +47,7 @@ class NFT:
         """
         *   algod_client: Client of Algorand.
         *   source_account: It's the account that will be the owner of the asset.
+        *   arc_type: Type of ARC, supported values are 'arc3', 'arc19'.
         *   unit_name: The name of a unit of this asset. Supplied on creation. Max size is 8 bytes. Example: USDT
         *   asset_name: The name of the asset. Supplied on creation. Max size is 32 bytes. Example: Tether
         *   asset_url: Specifies a URL where more information about the asset can be retrieved. Max size is 96 bytes.
@@ -116,12 +117,12 @@ class NFT:
             total=self.total,
             default_frozen=self.default_frozen,
             unit_name=self.unit_name,
-            asset_name=self.arc3_schema.asset_name,
+            asset_name=self.arc3_schema.arc.asset_name,
             manager=self.manager_account.address,
             reserve=self.reserve_account.address,
             freeze=self.freeze_account.address if self.freeze_account else None,
             clawback=self.clawback_account.address if self.clawback_account else None,
-            url=self.arc3_schema.asset_url,
+            url=self.arc3_schema.arc.asset_url,
             decimals=self.decimals,
             strict_empty_address_check=self.strict_empty_address_check,
         )
@@ -145,11 +146,11 @@ class NFT:
 
     def validate_asset_url(self) -> None:
         """Validates the asset url is accessible"""
-        response = requests.get(self.arc3_schema.asset_url)
+        response = requests.get(self.arc3_schema.arc.asset_url)
 
         if not response.ok:
             raise exceptions.AssetUrlNotAccessible(
-                f"The asset url {self.arc3_schema.asset_url} it was not accessible."
+                f"The asset url {self.arc3_schema.arc.asset_url} it was not accessible."
                 "Please, verify the url is still up."
             )
 

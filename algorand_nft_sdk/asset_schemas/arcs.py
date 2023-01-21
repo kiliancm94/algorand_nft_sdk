@@ -1,7 +1,9 @@
 from enum import Enum
+from typing import Union
 from pydantic import BaseModel
 
 from .arc3 import ARC3
+from .arc19 import ARC19
 
 
 class ARCType(str, Enum):
@@ -19,4 +21,4 @@ class ARCType(str, Enum):
 
 
 class ARC(BaseModel):
-    arc: ARC3
+    arc: Union[ARC3, ARC19]
