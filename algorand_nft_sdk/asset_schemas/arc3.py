@@ -16,7 +16,6 @@ ARC3_URL: str = "https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0
 
 
 class ARC3(BaseModel):
-    arc_type: Literal["arc3"]
     unit_name: Optional[str]
     asset_name: Optional[str]
     asset_url: Optional[AnyUrl]
@@ -31,7 +30,7 @@ class ARC3(BaseModel):
         return v
 
     @validator("asset_url")
-    def validate_asset_url(cls, v: str, values: dict):
+    def validate_asset_url(cls, v: str, values: dict) -> str:
         if "{id}" not in v:
             try:
                 response = requests.get(v.rstrip("#arc3"))
@@ -93,7 +92,7 @@ class ARC3Metadata(BaseModel):
             raise ValueError("extra_metadata field must be a string in base64")
 
     @validator("background_color")
-    def validate_background_color(cls, v: str):
+    def validate_background_color(cls, v: str) -> str:
         if not v.startswith("#"):
             raise ValueError(
                 f"background_color must start with '#', please check {ARC3_URL}"

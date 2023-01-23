@@ -8,3 +8,8 @@ class AssetIdIsNone(Exception):
 
 class ValueErrorAssetUrl(Exception):
     pass
+
+
+# arc19 exceptions
+class VersionError(Exception):
+    pass

@@ -110,6 +110,14 @@ def nft(ctx: click.Context, private_key: str):
     is_flag=True,
     help="If it allows empty addresses.",
 )
+@click.option(
+    "--url-validation",
+    type=bool,
+    default=False,
+    required=False,
+    is_flag=True,
+    help="It validates the url is accessible.",
+)
 def mint_nft_arc(
     ctx: click.Context,
     **kwargs,

@@ -1,6 +1,5 @@
 from enum import Enum
 from typing import Union
-from pydantic import BaseModel
 
 from .arc3 import ARC3
 from .arc19 import ARC19
@@ -19,6 +18,9 @@ class ARCType(str, Enum):
     ARC_20 = "arc20"
     ARC_69 = "arc69"
 
-
-class ARC(BaseModel):
-    arc: Union[ARC3, ARC19]
+    @classmethod
+    def get_arc_class(cls, arc_type: str) -> Union[ARC3, ARC19]:
+        if arc_type == cls.ARC_3:
+            return ARC3
+        elif arc_type == cls.ARC_19:
+            return ARC19

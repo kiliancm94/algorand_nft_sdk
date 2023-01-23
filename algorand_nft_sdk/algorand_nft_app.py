@@ -32,6 +32,7 @@ def mint_nft_arc(
     clawback_account: Optional[Account] = None,
     strict_empty_address_check: bool = True,
     overrides_suggested_params: Optional[dict] = None,
+    url_validation: bool = False,
 ):
     private_key = get_private_key_from_file_or_string(private_key)
 
@@ -61,7 +62,8 @@ def mint_nft_arc(
         overrides_suggested_params=overrides_suggested_params,
     )
 
-    arc_nft.validate_asset_url()
+    if url_validation:
+        arc_nft.validate_asset_url()
     arc_nft.create()
 
 

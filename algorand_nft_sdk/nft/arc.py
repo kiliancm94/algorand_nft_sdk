@@ -9,7 +9,7 @@ from algorand_nft_sdk.utils.logger import get_logger
 from algorand_nft_sdk.nft import exceptions
 
 # from algorand_nft_sdk.asset_schemas.arc3 import ARC3
-from algorand_nft_sdk.asset_schemas.arcs import ARC, ARCType
+from algorand_nft_sdk.asset_schemas.arcs import ARCType
 from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.utils.transaction import sign_and_send_transaction
 
@@ -71,14 +71,15 @@ class NFT:
 
         self.algod_client = algod_client
         self.source_account = source_account
+
+        ARC = ARCType.get_arc_class(arc_type=arc_type)
         arc_dict = dict(
-            arc_type=arc_type,
             unit_name=unit_name,
             asset_name=asset_name,
             asset_url=asset_url,
             asset_metadata_hash=asset_metadata_hash,
         )
-        self.arc3_schema = ARC(arc={k: v for k, v in arc_dict.items() if v})
+        self.arc_schema = ARC.parse_obj({k: v for k, v in arc_dict.items() if v})
         self.unit_name = unit_name
         self.total = total
         self.decimals = decimals
@@ -117,12 +118,12 @@ class NFT:
             total=self.total,
             default_frozen=self.default_frozen,
             unit_name=self.unit_name,
-            asset_name=self.arc3_schema.arc.asset_name,
+            asset_name=self.arc_schema.asset_name,
             manager=self.manager_account.address,
             reserve=self.reserve_account.address,
             freeze=self.freeze_account.address if self.freeze_account else None,
             clawback=self.clawback_account.address if self.clawback_account else None,
-            url=self.arc3_schema.arc.asset_url,
+            url=self.arc_schema.asset_url,
             decimals=self.decimals,
             strict_empty_address_check=self.strict_empty_address_check,
         )
@@ -146,11 +147,11 @@ class NFT:
 
     def validate_asset_url(self) -> None:
         """Validates the asset url is accessible"""
-        response = requests.get(self.arc3_schema.arc.asset_url)
+        response = requests.get(self.arc_schema.asset_url)
 
         if not response.ok:
             raise exceptions.AssetUrlNotAccessible(
-                f"The asset url {self.arc3_schema.arc.asset_url} it was not accessible."
+                f"The asset url {self.arc_schema.asset_url} it was not accessible."
                 "Please, verify the url is still up."
             )
 
