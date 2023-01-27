@@ -43,6 +43,7 @@ class NFT:
         clawback_account: Optional[Account] = None,
         strict_empty_address_check: bool = True,
         overrides_suggested_params: Optional[dict] = None,
+        do_metadata_validation: bool = True,
     ) -> None:
         """
         *   algod_client: Client of Algorand.
@@ -63,6 +64,7 @@ class NFT:
         *   clawback_account The account that can clawback holdings of this asset. If empty, clawback is not permitted.
         *   strict_empty_address_check: If False, permits empty addresses.
         *   overrides_suggested_params: For advance users, you can provide additional attributes you want to overwrite over the suggested params.
+        *   do_metadata_validation: Download the metadata json file and validate its content.
 
         By default, if no manager and no reserve account are provided, the source account will inherate all those privilages.
 
@@ -73,6 +75,7 @@ class NFT:
         self.source_account = source_account
 
         ARC = ARCType.get_arc_class(arc_type=arc_type)
+        self.ARC_METADATA_SCHEMA = ARCType.get_arc_metadata_validator(arc_type=arc_type)
         arc_dict = dict(
             unit_name=unit_name,
             asset_name=asset_name,
@@ -95,13 +98,14 @@ class NFT:
             for key, value in overrides_suggested_params.items():
                 setattr(self.params, key, value)
 
-        self.manager_account = manager_account if manager_account else source_account
-        self.reserve_account = reserve_account if reserve_account else source_account
+        self.manager_account = manager_account
+        self.reserve_account = reserve_account
         self.freeze_account = freeze_account
         self.clawback_account = clawback_account
 
         self.strict_empty_address_check = strict_empty_address_check
         self.asset_id = asset_id
+        self.do_metadata_validation = do_metadata_validation
 
     def validate_asset_is_created(self):
         if not self.asset_id:
@@ -109,8 +113,26 @@ class NFT:
                 "Send the asset_id when it's initialized or create it first."
             )
 
+    def validate_metadata(self) -> None:
+        """Validates the JSON metadata content"""
+        if not self.do_metadata_validation:
+            return
+
+        if not self.arc_schema.asset_url:
+            return
+        response = requests.get(self.arc_schema.asset_url)
+
+        if not response.ok:
+            raise exceptions.AssetUrlNotAccessible(
+                f"asset_url: {self.arc_schema.asset_url} is not accessible"
+            )
+
+        metadata = response.json()
+        self.ARC_METADATA_SCHEMA.parse_obj(metadata)
+
     def create(self) -> str:
         """Sends a transaction to create the asset"""
+        self.validate_metadata()
         # Asset Creation transaction
         txn = transaction.AssetConfigTxn(
             sender=self.source_account.address,

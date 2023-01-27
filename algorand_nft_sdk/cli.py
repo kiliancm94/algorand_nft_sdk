@@ -1,10 +1,33 @@
+import os
 from typing import Optional
 import click
 import json
+import pydantic
+from contextlib import contextmanager
 
 from algorand_nft_sdk import algorand_nft_app
 from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
+
+DEBUG_MODE = os.getenv(
+    "DEBUG_MODE", False
+)  # Fixme: Change to False by default when finished
+
+
+class CLIExceptionManager:
+    def __init__(self) -> None:
+        pass
+
+    def __enter__(self) -> None:
+        pass
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        if DEBUG_MODE:
+            click.echo("Reraising exception since DEBUG MODE is active!")
+            raise
+        else:
+            click.echo(f"{exc_type}: {exc_val}")
+            return True
 
 
 @click.group()
@@ -118,15 +141,38 @@ def nft(ctx: click.Context, private_key: str):
     is_flag=True,
     help="It validates the url is accessible.",
 )
+@click.option(
+    "--skip-metadata-validation",
+    type=bool,
+    default=False,
+    is_flag=True,
+    required=False,
+    help="If it's sent it validates the JSON metadata file of the token.",
+)
 def mint_nft_arc(
     ctx: click.Context,
     **kwargs,
 ):
     kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
-    algorand_nft_app.mint_nft_arc(
-        private_key=ctx.obj["private_key"],
-        **kwargs,
-    )
+    kwargs["do_metadata_validation"] = kwargs.pop("skip_metadata_validation") == False
+
+    with CLIExceptionManager():
+        try:
+            algorand_nft_app.mint_nft_arc(
+                private_key=ctx.obj["private_key"],
+                **kwargs,
+            )
+        except Exception as error:
+            if "url" in str(error):
+                click.echo(str(error))
+
+                click.echo(
+                    "There was an error while validating url. "
+                    "In case your url is not accessible and you want to skip the validation, "
+                    "you can send the paramter --skip-metadata-validation."
+                )
+
+            raise
 
 
 @nft.command
@@ -139,7 +185,8 @@ def mint_nft_arc(
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
 def transfer_nft_arc(ctx, **kwargs):
-    algorand_nft_app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+    with CLIExceptionManager():
+        algorand_nft_app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -148,7 +195,8 @@ def transfer_nft_arc(ctx, **kwargs):
     "--asset-id", type=int, required=True, help="Id of the asset to transfer."
 )
 def optin_nft_arc(ctx, **kwargs):
-    algorand_nft_app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+    with CLIExceptionManager():
+        algorand_nft_app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -163,14 +211,15 @@ def account_assets(ctx, address: Optional[str] = None) -> None:
     if ctx.obj["private_key"] and address:
         click.echo("Private key is sent, hence address is ignored.")
 
-    click.echo(
-        json.dumps(
-            algorand_nft_app.account_assets(
-                private_key=ctx.obj["private_key"], address=address
-            ),
-            indent=2,
+    with CLIExceptionManager():
+        click.echo(
+            json.dumps(
+                algorand_nft_app.account_assets(
+                    private_key=ctx.obj["private_key"], address=address
+                ),
+                indent=2,
+            )
         )
-    )
 
 
 if __name__ == "__main__":
