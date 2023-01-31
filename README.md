@@ -5,7 +5,7 @@ TODO:
 [x] Repair when do anything that is not creating a token and it fails because
  of missing paramters
 [x] Change the current NFT class to decide the ARC type
-[ ] Change how we decide the type to avoid issues with pydantic, better one function to decide the type.
+[x] Change how we decide the type to avoid issues with pydantic, better one function to decide the type.
 [x] ARC19
 [ ] ARC20
 [ ] ARC18

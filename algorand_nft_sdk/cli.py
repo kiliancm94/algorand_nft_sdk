@@ -10,24 +10,27 @@ from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
 
 DEBUG_MODE = os.getenv(
-    "DEBUG_MODE", False
+    "DEBUG_MODE", True
 )  # Fixme: Change to False by default when finished
 
 
 class CLIExceptionManager:
     def __init__(self) -> None:
+        if DEBUG_MODE:
+            click.echo("DEBUG MODE ENABLED!!!")
         pass
 
     def __enter__(self) -> None:
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
-        if DEBUG_MODE:
-            click.echo("Reraising exception since DEBUG MODE is active!")
-            raise
-        else:
-            click.echo(f"{exc_type}: {exc_val}")
-            return True
+        if exc_type:
+            if DEBUG_MODE:
+                click.echo("Reraising exception since DEBUG MODE is active!")
+                raise
+            else:
+                click.echo(f"{exc_type}: {exc_val}")
+                return True
 
 
 @click.group()
@@ -163,7 +166,10 @@ def mint_nft_arc(
                 **kwargs,
             )
         except Exception as error:
-            if "url" in str(error):
+            if (
+                "url" in str(error)
+                and not type(error) is pydantic.error_wrappers.ValidationError
+            ):
                 click.echo(str(error))
 
                 click.echo(
