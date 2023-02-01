@@ -88,7 +88,6 @@ def transfer_nft_arc(
     )
 
     receiver_account = Account(address=receiver_address)
-    print(receiver_account.address)
 
     arc_nft.transfer(receiver=receiver_account, amount=amount)
 
@@ -122,3 +121,43 @@ def account_assets(private_key: Optional[str], address: Optional[str]):
     )
 
     return account.get_assets_of_account(algod_client=algod_client)
+
+
+def update_nft_arc(
+    private_key: str,
+    asset_id: int,
+    fee: Optional[int] = None,
+    flat_fee: Optional[bool] = None,
+    manager_account: Optional[Account] = None,
+    reserve_account: Optional[Account] = None,
+    freeze_account: Optional[Account] = None,
+    clawback_account: Optional[Account] = None,
+    strict_empty_address_check: bool = True,
+    overrides_suggested_params: Optional[dict] = None,
+):
+    """
+    Once an asset is created only the manager, reserve, freeze and
+    clawback accounts of the asset can be modified.
+    """
+    private_key = get_private_key_from_file_or_string(private_key)
+
+    source_account = Account(
+        private_key=private_key,
+        address=address_from_private_key(private_key=private_key),
+    )
+
+    arc_nft = arc.NFT(
+        algod_client=algod_client,
+        asset_id=asset_id,
+        source_account=source_account,
+        fee=fee,
+        flat_fee=flat_fee,
+        manager_account=manager_account,
+        reserve_account=reserve_account,
+        freeze_account=freeze_account,
+        clawback_account=clawback_account,
+        strict_empty_address_check=strict_empty_address_check,
+        overrides_suggested_params=overrides_suggested_params,
+    )
+
+    arc_nft.update()

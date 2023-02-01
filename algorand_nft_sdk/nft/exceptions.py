@@ -6,6 +6,10 @@ class AssetIdIsNone(Exception):
     pass
 
 
+class AssetUpdateError(Exception):
+    pass
+
+
 class ValueErrorAssetUrl(Exception):
     pass
 

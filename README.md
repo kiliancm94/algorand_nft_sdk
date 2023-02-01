@@ -10,6 +10,7 @@ TODO:
 [ ] ARC20
 [ ] ARC18
 [x] ARC69
+[WIP] Solve the issues with update nft method.
 [ ] Add tests
 [ ] Improve the naming of the libraries
 [ ] Create the documentation

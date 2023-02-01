@@ -160,12 +160,11 @@ class NFT:
         try:
             ptx = self.algod_client.pending_transaction_info(txid)
             asset_id = ptx["asset-index"]
-
             self.asset_id = asset_id
-
             log.info(f"asset_id: {asset_id}")
         except Exception as e:
-            print(e)
+            log.error(e)
+            raise
 
     def validate_asset_url(self) -> None:
         """Validates the asset url is accessible"""
@@ -232,6 +231,46 @@ class NFT:
             algod_client=self.algod_client,
             source_account=self.source_account,
             txn=txn_transfer,
+            log=log,
+        )
+        log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
+
+    def update(self) -> None:
+        """
+        Once an asset is created only the manager, reserve, freeze and
+        clawback accounts of the asset can be modified.
+        """
+        self.validate_asset_is_created()
+        if not any(
+            [
+                self.manager_account,
+                self.reserve_account,
+                self.freeze_account,
+                self.clawback_account,
+            ]
+        ):
+            error_msg = (
+                "Manager, reserve, freeze and clawback accounts are not sent.\n"
+                "Only those accounts can be modified."
+            )
+            log.error(error_msg)
+            raise exceptions.AssetUpdateError(error_msg)
+
+        txn = transaction.AssetConfigTxn(
+            sender=self.source_account.address,
+            sp=self.params,
+            index=self.asset_id,
+            manager=self.manager_account.address if self.manager_account else None,
+            reserve=self.reserve_account.address if self.manager_account else None,
+            freeze=self.freeze_account.address if self.freeze_account else None,
+            clawback=self.clawback_account.address if self.clawback_account else None,
+            strict_empty_address_check=self.strict_empty_address_check,
+        )
+
+        _, confirmed_txn = sign_and_send_transaction(
+            algod_client=self.algod_client,
+            source_account=self.source_account,
+            txn=txn,
             log=log,
         )
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")

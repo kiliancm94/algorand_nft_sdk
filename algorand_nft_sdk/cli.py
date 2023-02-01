@@ -228,5 +228,66 @@ def account_assets(ctx, address: Optional[str] = None) -> None:
         )
 
 
+@nft.command
+@click.pass_context
+@click.option(
+    "--asset-id", type=int, required=True, help="Id of the asset to transfer."
+)
+@click.option(
+    "--fee", required=False, type=int, default=None, help="The fee of the transaction."
+)
+@click.option(
+    "--flat-fee",
+    required=False,
+    type=bool,
+    is_flag=True,
+    default=None,
+    help="If it's a flat fee",
+)
+@click.option(
+    "--manager-account",
+    type=str,
+    required=False,
+    help="The account of the manager of the token.",
+)
+@click.option(
+    "--reserve-account",
+    type=str,
+    required=False,
+    help="The account for reserve token.",
+)
+@click.option(
+    "--freeze-account",
+    type=str,
+    required=False,
+    help="The account that can freeze the token.",
+)
+@click.option(
+    "--clawback-account",
+    type=str,
+    required=False,
+    help="The account that can clawback the token.",
+)
+@click.option(
+    "--permit-empty-address",
+    type=bool,
+    required=False,
+    default=False,
+    is_flag=True,
+    help="If it allows empty addresses.",
+)
+def update_nft_arc(
+    ctx: click.Context,
+    **kwargs,
+):
+    kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
+
+    with CLIExceptionManager():
+        algorand_nft_app.update_nft_arc(
+            private_key=ctx.obj["private_key"],
+            **kwargs,
+        )
+
+
 if __name__ == "__main__":
     nft(obj={})
