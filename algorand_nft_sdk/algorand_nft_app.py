@@ -134,7 +134,7 @@ def update_nft_arc(
     asset_id: int,
     fee: Optional[int] = None,
     flat_fee: Optional[bool] = None,
-    manager_account: Optional[Account] = None,
+    manager_account: Optional[str] = None,
     reserve_account: Optional[Account] = None,
     freeze_account: Optional[Account] = None,
     clawback_account: Optional[Account] = None,
@@ -151,6 +151,9 @@ def update_nft_arc(
         private_key=private_key,
         address=address_from_private_key(private_key=private_key),
     )
+
+    # FIXME: Add this in all the places
+    manager_account = Account(address=manager_account) if manager_account else None
 
     arc_nft = arc.NFT(
         algod_client=algod_client,
