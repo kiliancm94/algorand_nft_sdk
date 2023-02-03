@@ -1,13 +1,18 @@
-import os
-from typing import Optional
-import click
 import json
-import pydantic
+import os
 from contextlib import contextmanager
+from typing import Optional
+
+import click
+import pydantic
+from algosdk.account import address_from_private_key
+from dotenv import load_dotenv
 
 from algorand_nft_sdk import algorand_nft_app
-from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
+from algorand_nft_sdk.utils.account import get_private_key_from_file_or_string
+
+load_dotenv()
 
 DEBUG_MODE = os.getenv(
     "DEBUG_MODE", True
@@ -287,6 +292,18 @@ def update_nft_arc(
             private_key=ctx.obj["private_key"],
             **kwargs,
         )
+
+
+@nft.command
+@click.pass_context
+def get_address_from_private_key(ctx: click.Context):
+    with CLIExceptionManager():
+        if "private_key" not in ctx.obj:
+            raise ValueError(f"private_key must be sent")
+        address = address_from_private_key(
+            get_private_key_from_file_or_string(private_key=ctx.obj["private_key"])
+        )
+        click.echo(f"The address is: {address}")
 
 
 if __name__ == "__main__":

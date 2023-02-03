@@ -1,17 +1,23 @@
+import os
 from typing import Optional
 
-from algosdk.v2client import algod
 from algosdk.account import address_from_private_key
+from algosdk.v2client import algod
 
+from algorand_nft_sdk.asset_schemas.arcs import ARCType
 from algorand_nft_sdk.nft import arc
 from algorand_nft_sdk.utils.account import Account, get_private_key_from_file_or_string
-from algorand_nft_sdk.asset_schemas.arcs import ARCType
 
-# FIXME: FROM HERE
-algod_address = "http://localhost:4001"
-algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-algod_client = algod.AlgodClient(algod_token, algod_address)
-# FIXME: UNTIL HERE
+ALGOD_ADDRESS = os.getenv("ALGOD_API_URL")
+ALGOD_API_KEY = os.getenv("ALGOD_API_KEY")
+
+if not (ALGOD_ADDRESS and ALGOD_API_KEY):
+    raise EnvironmentError(
+        f"Environment variables API_URL and ALGOD_API_KEY must be configured."
+    )
+algod_client = algod.AlgodClient(
+    "", ALGOD_ADDRESS, headers={"X-API-Key": ALGOD_API_KEY}
+)
 
 
 def mint_nft_arc(

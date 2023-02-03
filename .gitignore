@@ -7,3 +7,4 @@ my_private_key_2
 algorand_nft_sdk.egg-info
 build/
 .DS_Store
+.env
