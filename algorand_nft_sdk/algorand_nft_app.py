@@ -48,6 +48,11 @@ def mint_nft_arc(
         address=address_from_private_key(private_key=private_key),
     )
 
+    manager_account = Account(address=manager_account) if manager_account else None
+    reserve_account = Account(address=reserve_account) if reserve_account else None
+    freeze_account = Account(address=freeze_account) if freeze_account else None
+    clawback_account = Account(address=clawback_account) if clawback_account else None
+
     arc_nft = arc.NFT(
         algod_client,
         source_account=source_account,
@@ -152,8 +157,10 @@ def update_nft_arc(
         address=address_from_private_key(private_key=private_key),
     )
 
-    # FIXME: Add this in all the places
     manager_account = Account(address=manager_account) if manager_account else None
+    reserve_account = Account(address=reserve_account) if reserve_account else None
+    freeze_account = Account(address=freeze_account) if freeze_account else None
+    clawback_account = Account(address=clawback_account) if clawback_account else None
 
     arc_nft = arc.NFT(
         algod_client=algod_client,

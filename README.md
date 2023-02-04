@@ -10,7 +10,7 @@ TODO:
 [ ] ARC20
 [ ] ARC18
 [x] ARC69
-[WIP] Solve the issues with update nft method. Now it is failing because the address provided
+[x] Solve the issues with update nft method. Now it is failing because the address provided
 should be Address, not str. Check it.
 [ ] Add tests
 [ ] Improve the naming of the libraries
