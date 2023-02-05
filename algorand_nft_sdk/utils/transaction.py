@@ -1,4 +1,5 @@
 import logging
+from typing import Tuple
 from algosdk.future import transaction
 from algosdk import algod
 
@@ -10,7 +11,7 @@ def sign_and_send_transaction(
     source_account: Account,
     txn: transaction.Transaction,
     log: logging.Logger,
-) -> dict:
+) -> Tuple[str, dict]:
     stxn = txn.sign(source_account.private_key)
     txid = algod_client.send_transaction(stxn)
 

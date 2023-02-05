@@ -1,6 +1,5 @@
 import json
 import os
-from contextlib import contextmanager
 from typing import Optional
 
 import click
@@ -8,15 +7,14 @@ import pydantic
 from algosdk.account import address_from_private_key
 from dotenv import load_dotenv
 
-from algorand_nft_sdk import algorand_nft_app
+from algorand_nft_sdk.app import nft as nft_app
+from algorand_nft_sdk.app import account as account_app
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
 from algorand_nft_sdk.utils.account import get_private_key_from_file_or_string
 
 load_dotenv()
 
-DEBUG_MODE = os.getenv(
-    "DEBUG_MODE", True
-)  # Fixme: Change to False by default when finished
+DEBUG_MODE = os.getenv("DEBUG_MODE") in ["True", "true"]
 
 
 class CLIExceptionManager:
@@ -166,7 +164,7 @@ def mint_nft_arc(
 
     with CLIExceptionManager():
         try:
-            algorand_nft_app.mint_nft_arc(
+            nft_app.mint_nft_arc(
                 private_key=ctx.obj["private_key"],
                 **kwargs,
             )
@@ -197,7 +195,7 @@ def mint_nft_arc(
 )
 def transfer_nft_arc(ctx, **kwargs):
     with CLIExceptionManager():
-        algorand_nft_app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+        nft_app.transfer_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -207,7 +205,7 @@ def transfer_nft_arc(ctx, **kwargs):
 )
 def optin_nft_arc(ctx, **kwargs):
     with CLIExceptionManager():
-        algorand_nft_app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
+        nft_app.optin_nft_arc(private_key=ctx.obj["private_key"], **kwargs)
 
 
 @nft.command
@@ -225,7 +223,7 @@ def account_assets(ctx, address: Optional[str] = None) -> None:
     with CLIExceptionManager():
         click.echo(
             json.dumps(
-                algorand_nft_app.account_assets(
+                account_app.account_assets(
                     private_key=ctx.obj["private_key"], address=address
                 ),
                 indent=2,
@@ -288,7 +286,7 @@ def update_nft_arc(
     kwargs["strict_empty_address_check"] = kwargs.pop("permit_empty_address") == False
 
     with CLIExceptionManager():
-        algorand_nft_app.update_nft_arc(
+        nft_app.update_nft_arc(
             private_key=ctx.obj["private_key"],
             **kwargs,
         )
@@ -296,12 +294,28 @@ def update_nft_arc(
 
 @nft.command
 @click.pass_context
-def get_address_from_private_key(ctx: click.Context):
+@click.option(
+    "--private-key",
+    type=str,
+    required=False,
+    help="File path of the private key or plain private key used to sign the transactions.",
+)
+def get_address_from_private_key(ctx: click.Context, private_key: str):
     with CLIExceptionManager():
-        if "private_key" not in ctx.obj:
-            raise ValueError(f"private_key must be sent")
+        if not ctx.obj["private_key"] and not private_key:
+            raise ValueError(
+                f"--private-key must be sent either as an option or as an argument"
+            )
+        elif ctx.obj["private_key"] and private_key:
+            click.echo(
+                "--private-key was sent as an argument and as a parmeter. "
+                "Private key sent as a parameter is used."
+            )
+
         address = address_from_private_key(
-            get_private_key_from_file_or_string(private_key=ctx.obj["private_key"])
+            get_private_key_from_file_or_string(
+                private_key=private_key or ctx.obj["private_key"]
+            )
         )
         click.echo(f"The address is: {address}")
 

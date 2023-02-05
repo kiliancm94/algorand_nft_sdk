@@ -2,7 +2,7 @@ from typing import Dict, Literal, Optional
 
 from pydantic import AnyUrl, BaseModel, validator
 
-from algorand_nft_sdk.nft import exceptions
+from algorand_nft_sdk.core import exceptions
 from algorand_nft_sdk.utils.logger import get_logger
 
 log = get_logger()

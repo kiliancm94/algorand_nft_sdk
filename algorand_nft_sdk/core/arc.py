@@ -6,9 +6,8 @@ from algosdk.future import transaction
 from algosdk.v2client import algod
 
 from algorand_nft_sdk.utils.logger import get_logger
-from algorand_nft_sdk.nft import exceptions
+from algorand_nft_sdk.core import exceptions
 
-# from algorand_nft_sdk.asset_schemas.arc3 import ARC3
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
 from algorand_nft_sdk.utils.account import Account
 from algorand_nft_sdk.utils.transaction import sign_and_send_transaction
@@ -108,6 +107,9 @@ class NFT:
         self.do_metadata_validation = do_metadata_validation
 
     def validate_asset_is_created(self):
+        """
+        Validate if an asset is created.
+        """
         if not self.asset_id:
             raise exceptions.AssetIdIsNone(
                 "Send the asset_id when it's initialized or create it first."
@@ -162,6 +164,7 @@ class NFT:
             asset_id = ptx["asset-index"]
             self.asset_id = asset_id
             log.info(f"asset_id: {asset_id}")
+            return asset_id
         except Exception as e:
             log.error(e)
             raise

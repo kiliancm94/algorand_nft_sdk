@@ -2,7 +2,7 @@ from pydantic import AnyUrl, BaseModel, validator
 from typing import Literal, Optional
 
 from algorand_nft_sdk.asset_schemas.arc3 import ARC3
-from algorand_nft_sdk.nft import exceptions
+from algorand_nft_sdk.core import exceptions
 from multihash.constants import HASH_CODES
 
 ARC19_URL = "https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0019.md"

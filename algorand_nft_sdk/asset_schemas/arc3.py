@@ -1,13 +1,12 @@
 import base64
 import hashlib
 import json
-from enum import Enum
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic import BaseModel, validator, AnyUrl
 
 from algorand_nft_sdk.utils.logger import get_logger
-from algorand_nft_sdk.nft import exceptions
+from algorand_nft_sdk.core import exceptions
 import requests
 
 
