@@ -7,13 +7,13 @@ TODO:
 [x] Change the current NFT class to decide the ARC type
 [x] Change how we decide the type to avoid issues with pydantic, better one function to decide the type.
 [x] ARC19
-[ ] ARC20
-[ ] ARC18
+[ ] ARC20 -- Pending
+[ ] ARC18 -- Pending
 [x] ARC69
 [x] Solve the issues with update nft method. Now it is failing because the address provided
 should be Address, not str. Check it.
-[ ] Add tests
-[ ] Improve the naming of the libraries
+[WIP] Add tests
+[x] Improve the naming of the libraries
 [ ] Create the documentation
 [ ] Create the video
 
