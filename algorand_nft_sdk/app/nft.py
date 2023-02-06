@@ -26,7 +26,6 @@ def mint_nft_arc(
     clawback_account: Optional[Account] = None,
     strict_empty_address_check: bool = True,
     overrides_suggested_params: Optional[dict] = None,
-    url_validation: bool = False,
     do_metadata_validation: bool = True,
 ):
     private_key = get_private_key_from_file_or_string(private_key)
@@ -62,10 +61,7 @@ def mint_nft_arc(
         overrides_suggested_params=overrides_suggested_params,
         do_metadata_validation=do_metadata_validation,
     )
-
-    if url_validation:
-        arc_nft.validate_asset_url()
-    arc_nft.create()
+    return arc_nft.create()
 
 
 def transfer_nft_arc(
@@ -88,7 +84,7 @@ def transfer_nft_arc(
 
     receiver_account = Account(address=receiver_address)
 
-    arc_nft.transfer(receiver=receiver_account, amount=amount)
+    return arc_nft.transfer(receiver=receiver_account, amount=amount)
 
 
 def optin_nft_arc(
@@ -107,7 +103,7 @@ def optin_nft_arc(
         source_account=source_account,
     )
 
-    arc_nft.optin()
+    return arc_nft.optin()
 
 
 def update_nft_arc(
@@ -152,4 +148,4 @@ def update_nft_arc(
         overrides_suggested_params=overrides_suggested_params,
     )
 
-    arc_nft.update()
+    return arc_nft.update()

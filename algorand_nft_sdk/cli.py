@@ -140,14 +140,6 @@ def nft(ctx: click.Context, private_key: str):
     help="If it allows empty addresses.",
 )
 @click.option(
-    "--url-validation",
-    type=bool,
-    default=False,
-    required=False,
-    is_flag=True,
-    help="It validates the url is accessible.",
-)
-@click.option(
     "--skip-metadata-validation",
     type=bool,
     default=False,

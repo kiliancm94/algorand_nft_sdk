@@ -169,16 +169,6 @@ class NFT:
             log.error(e)
             raise
 
-    def validate_asset_url(self) -> None:
-        """Validates the asset url is accessible"""
-        response = requests.get(self.arc_schema.asset_url)
-
-        if not response.ok:
-            raise exceptions.AssetUrlNotAccessible(
-                f"The asset url {self.arc_schema.asset_url} it was not accessible."
-                "Please, verify the url is still up."
-            )
-
     def transfer(self, receiver: Account, amount: int) -> str:
         """
         Sends the NFT to an account
@@ -230,13 +220,14 @@ class NFT:
             index=self.asset_id,
         )
 
-        _, confirmed_txn = sign_and_send_transaction(
+        txid, confirmed_txn = sign_and_send_transaction(
             algod_client=self.algod_client,
             source_account=self.source_account,
             txn=txn_transfer,
             log=log,
         )
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
+        return txid
 
     def update(self) -> None:
         """
@@ -270,10 +261,11 @@ class NFT:
             strict_empty_address_check=self.strict_empty_address_check,
         )
 
-        _, confirmed_txn = sign_and_send_transaction(
+        txid, confirmed_txn = sign_and_send_transaction(
             algod_client=self.algod_client,
             source_account=self.source_account,
             txn=txn,
             log=log,
         )
         log.info(f"Transaction information: {json.dumps(confirmed_txn, indent=4)}")
+        return txid
