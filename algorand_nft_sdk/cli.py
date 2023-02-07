@@ -7,6 +7,8 @@ import pydantic
 from algosdk.account import address_from_private_key
 from dotenv import load_dotenv
 
+from algosdk.account import generate_account
+
 from algorand_nft_sdk.app import nft as nft_app
 from algorand_nft_sdk.app import account as account_app
 from algorand_nft_sdk.asset_schemas.arcs import ARCType
@@ -310,6 +312,19 @@ def get_address_from_private_key(ctx: click.Context, private_key: str):
             )
         )
         click.echo(f"The address is: {address}")
+
+
+@nft.command
+@click.pass_context
+def generate_an_account(ctx: click.Context):
+    with CLIExceptionManager():
+        account = account_app.Account(*generate_account())
+        click.echo(
+            f"Account generated!\nAddress: \t{account.address}\nPrivate Key: \t{account.private_key}"
+        )
+        click.echo(
+            "DON'T GIVE THE PRIVATE KEY TO ANY ONE, THEY COULD GET YOUR ALGOS!!!"
+        )
 
 
 if __name__ == "__main__":
