@@ -1,8 +1,3 @@
-
-### Installing the CLI
-
-To install the CLI you need to donwload first git package, you can clone it by executing the next command in the
-
 TODO:
 [x] Finished with ARC3
 [x] Repair when do anything that is not creating a token and it fails because
@@ -17,7 +12,7 @@ TODO:
 should be Address, not str. Check it.
 [x] Add tests
 [x] Improve the naming of the libraries
-[ ] Create the documentation
+[x] Create the documentation
 [ ] Create the video
 [x] Add license
 [ ] Add contributors file
