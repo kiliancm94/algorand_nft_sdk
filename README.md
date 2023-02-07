@@ -3,13 +3,12 @@
 Welcome to the Algorand NFT SDK! The Algorand NFT SDK is software to help you to manage and interact with Algorand Non-Fungible Tokens (NFTs) in the Algorand network. The project comes in 2 flavours, one is more for developers and the other one for non-developers. The first flavour is a Python package that you can use for managing the NFTs by coding and use it for your own applications. The second flavour is a command line interface (CLI).
 
 ## Motivation
-
 The main motivation of this project is to provide great tooling to help developers and non-developers to manage their NFTs in the Algorand network by minimizing the learning curve. And of course, to have fun while building for others and learning about a great project, Algorand.
 
 ## How to use CLI
+Let's install and run some examples of the CLI.
 
 ### Installing CLI
-
 Firstly, you should clone the github repository.
 
 ```bash
@@ -146,6 +145,7 @@ Hello!
 ```
 
 The token was tranferred with success.
+
 ```bash
 algonft --private-key my_private_key_4 account-assets
 Hello!
