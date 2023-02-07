@@ -1,1 +1,1 @@
-pdoc --output-dir build ./algorand_nft_sdk
+pdoc --output-dir docs ./algorand_nft_sdk
