@@ -29,6 +29,7 @@ should be Address, not str. Check it.
 [ ] Create the documentation
 [ ] Create the video
 [ ] Add license
+[ ] Add contributors file
 
 [ ] Extra! Needs to confirm where should be located the metadata json file
 
