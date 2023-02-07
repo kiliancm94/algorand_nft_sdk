@@ -5,7 +5,7 @@ Welcome to the Algorand NFT SDK! The Algorand NFT SDK is software to help you to
 ## Motivation
 The main motivation of this project is to provide great tooling to help developers and non-developers to manage their NFTs in the Algorand network by minimizing the learning curve. And of course, to have fun while building for others and learning about a great project, Algorand.
 
-In order to help developers building their NFTs this SDK includes some data validation in order to help you to meet the ARCs requirements. So far, only the ARCs available for NFTs are ARC3, ARC19 and ARC69.
+In order to help developers build their NFTs this SDK includes some data validation in order to help you to meet the ARCs requirements. So far, only the ARCs available for NFTs are ARC3, ARC19 and ARC69.
 
 ## How to use CLI
 Let's install and run some examples of the CLI.
