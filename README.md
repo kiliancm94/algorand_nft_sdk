@@ -8,6 +8,41 @@ The main motivation of this project is to provide great tooling to help develope
 
 ## How to use CLI
 
+Firstly, you should clone the github repository.
+
+```bash
+git clone <here the public link>
+cd algorand_nft_sdk
+```
+
+Secondly, you need to run have to installed python, and I would recommend to create a virtual envrionment. Then, you can run the pip install command.
+
+```bash
+pip install .
+```
+
+Finally, you can call the CLI program as following:
+
+```bash
+algonft
+
+Usage: algonft [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --private-key TEXT  File path of the private key or plain private key used
+                      to sign the transactions.
+  --help              Show this message and exit.
+
+Commands:
+  account-assets
+  get-address-from-private-key
+  mint-nft-arc
+  optin-nft-arc
+  transfer-nft-arc
+  update-nft-arc
+```
+
+
 ### Installing the CLI
 
 To install the CLI you need to donwload first git package, you can clone it by executing the next command in the
@@ -28,7 +63,7 @@ should be Address, not str. Check it.
 [x] Improve the naming of the libraries
 [ ] Create the documentation
 [ ] Create the video
-[ ] Add license
+[x] Add license
 [ ] Add contributors file
 
 [ ] Extra! Needs to confirm where should be located the metadata json file
