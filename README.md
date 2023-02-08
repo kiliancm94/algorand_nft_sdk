@@ -8,9 +8,8 @@ The main motivation of this project is to provide great tooling to help develope
 In order to help developers build their NFTs this SDK includes some data validation in order to help you to meet the ARCs requirements. So far, only the ARCs available for NFTs are ARC3, ARC19 and ARC69.
 
 ## How to use CLI
-Let's install and run some examples of the CLI.
 
-### Installing CLI
+Let's install and run some examples of the CLI.
 
 Firstly, you should clone the github repository.
 
@@ -200,8 +199,7 @@ Hello!
 
 The CLI is an entry point that uses a Python package responsible of all the logic. This package has been built in order to be reused and helful for other developers. Here you will find how to perform some tasks as we saw before in your Python scripts, but also, you can find an extensive docs in the folder `docs`.
 
-
-### Installing the Python package
+Let's install the Python package.
 
 Firstly, clone the github repository.
 
