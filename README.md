@@ -46,6 +46,30 @@ Commands:
   update-nft-arc
 ```
 
+### Configuring mandatory environment variables
+
+Either if you want to use the CLI or the Python version you need to configure as environment variables the address of the Algorand API and your token. For testing purpose you can either emulate your own node or use an external service. I would hightly recommend to use an external service. In my case, I am using Purestake.io, https://developer.purestake.io/home.
+
+```bash
+export ALGOD_API_URL="Here your Algod API URL"
+export ALGOD_API_KEY="Here your Algod API KEY"
+```
+
+If you forget to configure them, you will see the following error message.
+
+```bash
+algonft
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/bin/algonft", line 5, in <module>
+    from algorand_nft_sdk.cli import nft
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/lib/python3.9/site-packages/algorand_nft_sdk/cli.py", line 12, in <module>
+    from algorand_nft_sdk.app import nft as nft_app
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/lib/python3.9/site-packages/algorand_nft_sdk/app/__init__.py", line 8, in <module>
+    raise EnvironmentError(
+OSError: Environment variables ALGOD_API_URL and ALGOD_API_KEY must be configured.
+```
+
 ### Errors detection
 See what happens in case you make a mistake, for example, creating an ARC3 NFT where the URL doesn't ends with `#arc3` and its name is not `arc3`.
 
@@ -187,6 +211,30 @@ Secondly, it is recommended you create a virtual environment. Then you can insta
 
 ```bash
 pip install .
+```
+
+### Configuring mandatory environment variables
+
+Either if you want to use the CLI or the Python version you need to configure as environment variables the address of the Algorand API and your token. For testing purpose you can either emulate your own node or use an external service. I would hightly recommend to use an external service. In my case, I am using Purestake.io, https://developer.purestake.io/home.
+
+```bash
+export ALGOD_API_URL="Here your Algod API URL"
+export ALGOD_API_KEY="Here your Algod API KEY"
+```
+
+If you forget to configure them, you will see the following error message.
+
+```bash
+algonft
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/bin/algonft", line 5, in <module>
+    from algorand_nft_sdk.cli import nft
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/lib/python3.9/site-packages/algorand_nft_sdk/cli.py", line 12, in <module>
+    from algorand_nft_sdk.app import nft as nft_app
+  File "/opt/homebrew/Caskroom/miniforge/base/envs/algo/lib/python3.9/site-packages/algorand_nft_sdk/app/__init__.py", line 8, in <module>
+    raise EnvironmentError(
+OSError: Environment variables ALGOD_API_URL and ALGOD_API_KEY must be configured.
 ```
 
 ### Creation and transferring of a NFT ARC69
