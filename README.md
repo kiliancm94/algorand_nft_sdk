@@ -199,9 +199,11 @@ Hello!
 
 The CLI is an entry point that uses a Python package responsible of all the logic. This package has been built in order to be reused and helful for other developers. Here you will find how to perform some tasks as we saw before in your Python scripts, but also, you can find an extensive docs in the folder `docs`.
 
+
 ### Installing the Python package
 
 Firstly, clone the github repository.
+
 ```bash
 git clone git@github.com:kiliancm94/algorand_nft_sdk.git
 cd algorand_nft_sdk
