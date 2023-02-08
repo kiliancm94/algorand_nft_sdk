@@ -11,6 +11,7 @@ In order to help developers build their NFTs this SDK includes some data validat
 Let's install and run some examples of the CLI.
 
 ### Installing CLI
+
 Firstly, you should clone the github repository.
 
 ```bash
